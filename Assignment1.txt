@@ -1,0 +1,20 @@
+Team Ganymede: Assignment 1
+
+Preamble: 
+
+Actual LOC: 
+	Main Method: 2
+	Start Method: 
+
+Estimated LOC at completion: 
+	Main Method: 10
+	Start Method: 50
+
+Total Effort:
+	Main Method: 
+		Raena: 1 minute
+	Start Method: 
+		Raena: 
+		Anh: 
+	
+
