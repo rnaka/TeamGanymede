@@ -1,6 +1,6 @@
 Team Ganymede: Assignment 1
 
-Preamble: 
+Preamble
 
 Actual LOC: 
 	Main Method: 2
@@ -8,13 +8,23 @@ Actual LOC:
 
 Estimated LOC at completion: 
 	Main Method: 10
-	Start Method: 50
+	Start Method: 250
 
 Total Effort:
 	Main Method: 
 		Raena: 1 minute
 	Start Method: 
-		Raena: 
+		Raena: 1 hour
 		Anh: 
 	
+The Assignment
+
+The Ambient produce is currently a JavaFX app that shows a gray circle upon first usage. When a value between 0 and 99 is entered into the textbox, the color of the circle will change depending on the value entered.
+
+Colors Guide
+Gray: The starting color
+Red: Any positive value less than and equal to 25
+Purple: Any Value between 25 to 50, excluding 25
+Green: Any value between 50 and 75, excluding 50
+Yellow: Any Value betweeen 75 and 99, excluding 75
 
