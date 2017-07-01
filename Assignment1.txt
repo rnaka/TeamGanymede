@@ -35,3 +35,4 @@ Dim: Any value between 0 and 33
 Regular: Any Value between 33 and 66
 Bright: Any Value between 66 and 99
 
+
