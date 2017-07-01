@@ -78,14 +78,16 @@ public class main extends Application {
                 
                 int savedValue2 = Integer.parseInt(value2.getText());
                 if ((savedValue2 >=0 && savedValue2 <=33)) {
-                	brightness.setBrightness(-1);
+                	brightness.setBrightness(-.5);
+                	circle.setEffect(brightness);
                 } else if ((savedValue2 >= 34 && savedValue2 <= 66)) {
                 	brightness.setBrightness(0);
                 } else if ((savedValue2 >= 67 && savedValue2 <= 99)) {
-                	brightness.setBrightness(1);
+                	brightness.setBrightness(.5);
                 } else {
                     warning.setText("You have not entered a valid value");
                 }
+            	circle.setEffect(brightness);
             }
         });
 		
