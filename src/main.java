@@ -1,5 +1,9 @@
 //Importing Java Libraries
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,6 +13,7 @@ import java.util.Scanner;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.paint.*;
@@ -27,10 +32,19 @@ public class main extends Application {
 		launch(args);
 	}
 		
+	int yellowValue;
+	int redValue;
+	Label result = new Label("");
+	int yellowValue3;
+	int redValue3;
+	Label results3 = new Label("");
+	
 		//start method 
 		public void start(Stage primaryStage) throws Exception{
 			
 	
+
+			
 			//Main Window
 			
 			//set layout of program to VBox
@@ -52,6 +66,9 @@ public class main extends Application {
 			RadioButton rb2 = new RadioButton("Incidents In Hawaii");
 			rb2.setToggleGroup(group);
 			
+			RadioButton rb3 = new RadioButton("Surf Forecast");
+			rb3.setToggleGroup(group);
+			
 			//Creating button
 			Button btn1 = new Button();
 			btn1.setText("Submit");
@@ -60,6 +77,7 @@ public class main extends Application {
 			root.getChildren().add(label1);
 			root.getChildren().add(rb1);
 			root.getChildren().add(rb2);
+			root.getChildren().add(rb3);
 			root.getChildren().add(btn1);
 			
 			//creates a new scene object with parameters layout of 400, 500
@@ -70,8 +88,6 @@ public class main extends Application {
 			
 			//shows the primary stage
 			primaryStage.show();
-			
-			
 			
 			//Pine Flat Window
 			
@@ -91,12 +107,18 @@ public class main extends Application {
 			}
 			String valA = s.next();
 			String valB = s.next();
+			
+			s.next();
+			s.next();
+			
+			String valC = s.next();
 			s.close();
 			
 			//Values needed from web site
 			int outflow = Integer.parseInt(valA);
 			int inflow = Integer.parseInt(valB);
 			int diff = outflow - inflow;
+			double temp = Double.parseDouble (valC);
 			
 			//Conversion to values 0-99
 			double tempSmall=-10, tempBig=3000, realSmall=0, realBig=99;
@@ -107,6 +129,7 @@ public class main extends Application {
 			System.out.println("Outflow: " + outflow);
 			System.out.println("Inflow: " + inflow);
 			System.out.println("Difference: " + newDiff);
+			System.out.println("Water Temp: " + temp);
 			
 			//Sets the program title
 			stage1.setTitle("Pine Flat");
@@ -125,6 +148,19 @@ public class main extends Application {
 				}
 			}
 						
+			//Setting Brightness
+			ColorAdjust brightness = new ColorAdjust();
+			brightness.setBrightness(0);
+			
+			if ((temp > 80 )) {
+			brightness.setBrightness(-.8);
+			} else if (temp > 65 ) {
+			brightness.setBrightness(0);
+			} else if (temp <=65) {
+			brightness.setBrightness(-.8);
+			} 
+			circle.setEffect(brightness);
+			
 			//List of Labels 
 			Label info = new Label("Outflow is currently at: " + outflow);
 			Label info2 = new Label("Inflow is currently at: " + inflow);
@@ -135,15 +171,6 @@ public class main extends Application {
 			//Create a Button
 			Button btn = new Button();
 			btn.setText("Main Menu");
-			
-			//Button Action
-	        btn.setOnAction(new EventHandler<ActionEvent>() {
-	            @Override
-	            public void handle(ActionEvent event) {
-	            	primaryStage.setScene(scene);
-	            	primaryStage.show();
-	            }
-	        });
 	        
 	        //Adding elements to root layout
 	        root1.getChildren().add(info);
@@ -179,19 +206,19 @@ public class main extends Application {
 			for(int i=7;i<elements.size()-4;i++)
 	        {
 				String type = elements.get(i).attr("title");
-	            if( type == "Incident"){
+	            if( type.contains("Incident")){
 	            	incident++;
 	            }
-	            else if( type == "Congestion"){
+	            else if( type.contains("Congestion")){
 	            	congestion++;
 	            }
-	            else if( type == "Construction"){
+	            else if( type.contains("Construction")){
 	            	construction++;
 	            }
-	            else if( type == "Weather") {
+	            else if( type.contains("Weather")) {
 	            	weather++;
 	            }
-	            else if( type == "Special Events"){
+	            else if( type.contains("Special Events")){
 	            	specialEvents++;
 	            }
 	        }
@@ -241,51 +268,58 @@ public class main extends Application {
 			e.getChildren().add(l5);
 			e.getChildren().add(circle5);
 			
+			if(yellowValue == 0){
+				yellowValue = 1;
+			}
+			if(redValue == 0){
+				redValue = 3;
+			}
+			
 			//Changing colors to be ambient
-			if(incident==0){
+			if(incident<yellowValue){
 				circle1.setFill(Color.GREEN);
 			}
-			else if(incident < 2){
+			else if(incident < redValue){
 				circle1.setFill(Color.YELLOW);
 			}
 			else{
 				circle1.setFill(Color.RED);
 			}
 			
-			if(congestion==0){
+			if(congestion < yellowValue){
 				circle2.setFill(Color.GREEN);
 			}
-			else if(congestion < 2){
+			else if(congestion <redValue){
 				circle2.setFill(Color.YELLOW);
 			}
 			else{
 				circle2.setFill(Color.RED);
 			}
 			
-			if(construction==0){
+			if(construction < yellowValue){
 				circle3.setFill(Color.GREEN);
 			}
-			else if(construction < 2){
+			else if(construction < redValue){
 				circle3.setFill(Color.YELLOW);
 			}
 			else{
 				circle3.setFill(Color.RED);
 			}
 			
-			if(weather==0){
+			if(weather < yellowValue){
 				circle4.setFill(Color.GREEN);
 			}
-			else if(weather < 2){
+			else if(weather < redValue){
 				circle4.setFill(Color.YELLOW);
 			}
 			else{
 				circle4.setFill(Color.RED);
 			}
 			
-			if(specialEvents ==0){
+			if(specialEvents < yellowValue){
 				circle5.setFill(Color.GREEN);
 			}
-			else if(specialEvents < 2){
+			else if(specialEvents < redValue){
 				circle5.setFill(Color.YELLOW);
 			}
 			else{
@@ -296,30 +330,185 @@ public class main extends Application {
 			Button btn2 = new Button();
 			btn2.setText("Main Menu");
 			
-			//Button Action
-	        btn2.setOnAction(new EventHandler<ActionEvent>() {
+			//adding circles to Hbox
+			set1.getChildren().add(a);
+			set1.getChildren().add(b);
+			set1.getChildren().add(c);
+			set2.getChildren().add(d);
+			set2.getChildren().add(e);
+			
+			//adding elements to scene
+			root2.getChildren().add(set1);
+			root2.getChildren().add(set2);
+			
+			Scene scene2 = new Scene(root2, 400, 700);
+			
+			
+			//Incidents Settings
+			
+			//set layout of program to VBox
+			VBox root2a = new VBox(20);
+			root2a.setAlignment(Pos.CENTER);
+			Stage stage2a = new Stage();
+			
+			//set layout of program to VBox
+			VBox desc2 = new VBox();
+			desc2.setAlignment(Pos.CENTER);
+			
+			//Sets the program title
+			stage2a.setTitle("Settings");
+			
+			//Creating Labels
+			Label desc2a = new Label("By default, all the circles will be green when");
+			Label desc2b = new Label("there are no incidents, congestions, etc.");
+			Label desc2c = new Label("If there is 1 or 2 instances, it will be yellow.");
+			Label desc2d = new Label("Any more will warrant a red circle.");
+			Label yellowLabel = new Label("When would you like to see the YELLOW circle?");
+			Label redLabel = new Label("When would you like to see the RED circle?");
+			
+			//adding elements to desc2
+			desc2.getChildren().add(desc2a);
+			desc2.getChildren().add(desc2b);
+			desc2.getChildren().add(desc2c);
+			desc2.getChildren().add(desc2d);
+
+			
+			//Creating TextFields
+			TextField yellow = new TextField();
+			yellow.setPromptText("e.i. 1");
+			yellow.setMaxWidth(100);
+			TextField red = new TextField();
+			red.setPromptText("e.i. 4");
+			red.setMaxWidth(100);
+			
+			Button btn2b = new Button();
+			btn2b.setText("Submit");
+			
+			//adding elements to scene
+			root2a.getChildren().add(desc2);
+			root2a.getChildren().add(yellowLabel);
+			root2a.getChildren().add(yellow);
+			root2a.getChildren().add(redLabel);
+			root2a.getChildren().add(red);
+			root2a.getChildren().add(btn2b);
+			
+			root2.getChildren().add(root2a);
+			root2.getChildren().add(result);
+			root2.getChildren().add(btn2);
+
+			
+			
+			//Surf Forecast Page
+			
+			//set layout of program to VBox
+			VBox root3 = new VBox(20);
+			root3.setAlignment(Pos.CENTER);
+			Stage stage3 = new Stage();
+			
+			//Sets the program title
+			stage2.setTitle("Surf Forecast");
+			
+			//use JSoup to grab values from web site
+			Document doc3 = Jsoup.connect("http://www.surfline.com/surf-report/ala-moana-bowls-oahu_5538/").get();
+			String range = doc3.select("#observed-wave-range").text();
+	        BufferedWriter out = new BufferedWriter(new FileWriter("test.txt"));
+	        out.write(range);  
+	        //Replace with the string im trying to write
+	        out.close();
+	        BufferedReader in = new BufferedReader(new FileReader("test.txt"));
+	        System.out.println("surf report: " + range);
+	        Circle c1 = new Circle(60);
+	        VBox forecast1 = new VBox(10);
+	        forecast1.setAlignment(Pos.CENTER);
+	        Label f1 = new Label("Ala Moana Bowl");
+	        forecast1.getChildren().add(f1);
+	        forecast1.getChildren().add(c1);
+	        
+	        switch (range) {
+	          case "2-3 ft":
+	          case "3-4 ft":
+
+	              c1.setFill(Color.DARKGREEN);
+	              break;
+	          case "4-5 ft":
+	          case "5-6 ft":
+	          case "7-8 ft":
+
+	              c1.setFill(Color.YELLOW);
+	              break;
+	          case "9-10 ft":
+	          case "10-11 ft":
+	          case "12+ ft":
+
+	              c1.setFill(Color.RED);
+	              break;
+	          case "FLAT":
+
+	              c1.setFill(Color.WHITE);
+	              break;
+	          default:
+	              break;
+	        }
+	        
+	        root3.getChildren().add(forecast1);
+	        Button btn4 = new Button("Main Menu");
+	       
+	        VBox desc3 = new VBox();
+	        desc3.setAlignment(Pos.CENTER);
+	        
+			//Creating Labels
+			Label desc3a = new Label("By default, if the surf is between 2-4 ft,");
+			Label desc3b = new Label("the circle will be green. If the surf is ");
+			Label desc3c = new Label("between 4-6 ft, the circle will be yellow.");
+			Label desc3d = new Label("Anything higher will be red. If there is no surf");
+			Label desc3e = new Label("then the circle will be white.");
+			Label yellowLabel3 = new Label("When would you like to see the YELLOW circle?");
+			Label redLabel3 = new Label("When would you like to see the RED circle?");
+			
+			//Creating TextFields
+			TextField yellow3 = new TextField();
+			yellow3.setMaxWidth(100);
+			yellow3.setPromptText("e.i. 1");
+			yellow3.setMaxWidth(100);
+			TextField red3 = new TextField();
+			red3.setMaxWidth(100);
+			red3.setPromptText("e.i. 4");
+			red3.setMaxWidth(100);
+			
+			Button btn3 = new Button("Submit");
+			
+			
+			//adding elements to desc2
+			desc3.getChildren().add(desc3a);
+			desc3.getChildren().add(desc3b);
+			desc3.getChildren().add(desc3c);
+			desc3.getChildren().add(desc3d);
+			desc3.getChildren().add(desc3e);
+			
+			root3.getChildren().add(desc3);
+			root3.getChildren().add(yellowLabel3);
+			root3.getChildren().add(yellow3);
+			root3.getChildren().add(redLabel3);
+			root3.getChildren().add(red3);
+			root3.getChildren().add(btn3);
+			root3.getChildren().add(results3);
+	        root3.getChildren().add(btn4);
+			
+			//creates a new scene object with parameters layout of 400, 500
+			Scene scene3 = new Scene(root3, 350, 600);
+			
+			
+			
+			//Button Actions
+
+	        btn.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
 	            	primaryStage.setScene(scene);
 	            	primaryStage.show();
 	            }
 	        });
-			
-			//adding circles to Hbox
-			set1.getChildren().add(a);
-			set1.getChildren().add(b);
-			set2.getChildren().add(c);
-			set2.getChildren().add(d);
-			
-			//adding elements to scene
-			root2.getChildren().add(set1);
-			root2.getChildren().add(set2);
-			root2.getChildren().add(e);
-			root2.getChildren().add(btn2);
-			
-			Scene scene2 = new Scene(root2, 300, 500);
-			
-			//Button Action
+	        
 	        btn1.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
@@ -331,7 +520,49 @@ public class main extends Application {
 	            		primaryStage.setScene(scene2);
 	            		primaryStage.show();
 	            	}
+	            	if(rb3.isSelected() == true){
+	            		primaryStage.setScene(scene3);
+	            		primaryStage.show();
+	            	}
 	            }
 	        });
+	        
+	        btn2.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	primaryStage.setScene(scene);
+	            	primaryStage.show();
+	            }
+	        });
+
+	        
+	        btn2b.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	yellowValue = Integer.parseInt(yellow.getText());
+	            	redValue = Integer.parseInt(red.getText());
+	            	result.setText("Changes Completed!"); 
+	            	primaryStage.show();
+	            }
+	        });
+	        
+	        btn3.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	yellowValue3 = Integer.parseInt(yellow.getText());
+	            	redValue3 = Integer.parseInt(red.getText());
+	            	results3.setText("Changes Completed!"); 
+	            	primaryStage.show();
+	            }
+	        });
+	        
+	        btn4.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	primaryStage.setScene(scene);
+	            	primaryStage.show();
+	            }
+	        });
+			
 		}	
 	}
